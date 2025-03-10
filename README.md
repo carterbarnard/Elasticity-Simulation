@@ -5,7 +5,7 @@
 The main goal of this simulation is to provide a user-friendly medium in which to demonstrate the effects of varying amounts of elasticity in an object. The user will be able to select a specific ball based on a mouse input, from there the user can modify an elasticity float value on a slider component to their desired level. The user will also be able to select and move the selected ball with their mouse, allowing them to move it in whichever way they please.
 
 ## Implementation
-The implementation of the model is done through the use of the following classes:
+The implementation of elasticity in the model is done through the use of the following classes:
 
 ### Elasticity
 The effect of elasticity will be achieved through the use of an `Elasticity` class, which holds the properties to be used in the physics calculations. The class will hold the standard functions of:
