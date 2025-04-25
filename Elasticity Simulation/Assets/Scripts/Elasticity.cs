@@ -1,16 +1,21 @@
 using UnityEngine;
 
-public class Elasticity
+public class Elasticity : MonoBehaviour
 {
-    float elasticValue;
+    [SerializeField] GameObject sphereObject;
 
-    public void SetElasticity(float elasticValue)
+    float heightThreshold;
+
+    public void Start()
     {
-        //
+        heightThreshold = sphereObject.transform.position.y;
     }
 
-    public void ApplyElasticity()
+    private void Update()
     {
-        //
+        if(sphereObject.transform.position.y > heightThreshold) 
+        {
+            sphereObject.transform.position = new Vector3(sphereObject.transform.position.x, heightThreshold, sphereObject.transform.position.z);
+        }
     }
 }
