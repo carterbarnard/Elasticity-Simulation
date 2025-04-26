@@ -1,36 +1,50 @@
 # Elasticity-Simulation
-[WIP] A simulation that showcases the properties of elasticity at varying levels based on user input in the Unity game engine
+A simulation that showcases the properties of elasticity at varying levels based on user input in the Unity game engine
 
 ## Goals
-The main goal of this simulation is to provide a user-friendly medium in which to demonstrate the effects of varying amounts of elasticity in an object. The user will be able to select a specific ball based on a mouse input, from there the user can modify an elasticity float value on a slider component to their desired level. The user will also be able to select and move the selected ball with their mouse, allowing them to move it in whichever way they please.
+The main goal of this simulation is to provide a user-friendly medium in which to demonstrate the effects of varying amounts of elasticity in an object. The user will be able to select varying levels of elasticity based on slider input, in addition to manipulating the position of the ball in order to observe the behavior when colliding with angled surfaces using slider inputs.
 
 ## Implementation
-The implementation of elasticity in the model is done through the use of the following classes:
+The simulation makes use of Unity's `Rigibody` component in order to handle the physics of the subject, as well as `PhysicsMaterial` component in order to simulate the elasticity of an object. The user interacts with the simulation through the use of sliders and buttons on screen, with a "Reset" button resetting the ball's position and velocity, and a "Start" button beginning the simulation in order to test the effects of the elastic value when interacting with varying positions and angles in the simulation area. The user can manipulate the elastcity value via a slider located in the bottom right of the screen with a value of 0-100 representing the percentage of elasticity on the object (o means it conserves 0% of the energy on impact, 100% means it conserves all the energy upon impact, bouncing it to the same postion in which is dropped). The user can also manipulate the ball's position in the x-axis using the slider located at the bottom-middle of the screen, as well as the ball's y-axis with the slider located on the right side of the screen. The implementation of elasticity in the model is done through the use of the following classes:
 
-### Elasticity
-The effect of elasticity will be achieved through the use of an `Elasticity` class, which holds the properties to be used in the physics calculations. The class will hold the standard functions of:
+### `BallInfo`
+The class, `BallInfo` holds information regarding the ball's position, elasticity level, and collision is held here, for purposes of data display and statisitic calculations. The class will override some of the standard fucntions of Unity's `MonoBehavior` class, which include:
 
-  - `SetElasticValue(float value)`: assigns a float value to the `elasticValue` attribute
+  - `Start()`: Assigns a value of `false` to the `hasBounced` boolean variable, for calculating the max height of the ball. Also sets the display text for information on the ball's position and elasticity percentage.
   
-  - `GetElasticValue()`: returns the `elasticValue` attribute
+  - `Update()`: If `hasBounced` is true, then the max height is calculated, displaying the height the ball reached after the initial bounce. Also updates the displayed position of the ball every frame.
   
-  - `ApplyElasticity(Ball ball)`: takes an instance of the `Ball` class as an argument, allowing specific ball objects to have certain levels of elasticity.
+  - `OnColisionEnter(Collision col)`: Assigns `true` to `hasBounced` variable if the ball has collided with a surface in the simulation.
 
-### PhysicsManager
-For the physics effects of gravity, air resistance, and inertia, the Unity scripting API class of `Rigidbody` will be used. The `PhysicsManager` class will inherit the `Rigidbody` class, as well as having an instance of the `Elasticity` class, in order to implement the elasticity float value into calculations for the movement of the ball. The functions present in this class are:
+### `ElasticitySlider`
+The `ElasticitySlider` class inherits the methods of the `MonoBehavior` class, overiding its `Start()` function. Handles the behavior of the slider the user interacts with to manipulate the value of elasticity on the ball in the simulation
 
-  - `AddForce(Vector3 force, ForceMode force, float elasticValue)`: uses the the arguments of a `Vector3`, `ForceMode`, and elasticity value in the form of a float value to determine the path of the ball
+  - `Start()`: Declares an instance of a material from the GameObject's (ball's) collider component, for the purpose of editing the bounciness attribute of the ball. Additionally sets the min/max value of the slider from 0-100 in the user interface, as well as implementing an event listener for the `OnSliderChange()` function.
     
-  - `ApplyElasticity(Ball ball)`: uses the `ApplyElasticity(Ball ball)` function from the `Elasticity` class to allow certain balls to have different levels of elasticity
+  - `OnSliderChange(float sliderValue)`: When the slider value is changed in the user interface, sets the material of the ball GameObject's bounciness value to a value equivalent to `sliderValue / 100` (since the `bounciness` variable from the `PhysicsMaterial class is a float value from 0-1).
 
-### Ball
-The `Ball` class represents the state of each ball object in the simulation. The attributes of this class include an instance of the `PhysicsManager` class, in addition to the functions below
+### `UserInput`
+The `UserInput` class represents the state of the simulation. Much like previous classes, this inherits and overrides the `Start()` function from the `MonoBehavior` class
 
-  - `IfCollision()`: calls for the opposite force to be applied, along with the new trajectory on collision with another object
+  - `Start()`: Assigns instance of the `BallInfo` component to the ballInfo variable, as well as an instance of the `Rigidbody` component to the ballRB variable. Event listeners are also added to the Start and Reset button from the user interface
     
-  - `UpdatePosition(Vector3 vec3)`: updates position of the ball object using `Vector3` object using `ApplyForce(Vector3 force)` function
+  - `WhenStartClicked()`: Sets `ballRB.isKinematic = false` so the ball is affected by the physics when the user presses the Start button in the UI. 
     
-  - `ApplyForce(Vector3 force)`: used as a helper function in the `UpdatePosition(Vector3 vec3)` function
+  - `WhenResetClicked()`: Sets `ballRB.isKinematic = true` so the ball is not affected by the physics when the user presses the Reset button in the UI, allowing them to position the ball and set their desired elasticity value. Also sets the velcoty of the ball to zero and places the ball in a neutral position in the center of the screen. The information display is also reset for new runs of data collection.
+
+### `XPositionSlider`
+This class handles the positioning on the x-axis of the ball, allowing the user to manipulate its position based on a slider in the UI. Inherits from `MonoBehavior`
+
+  - `Start()`: Sets min/mmax values of the slider and adds listener for slider change events.
+  
+  - `OnSliderChange(float sliderValue)`: Moves the ball's x-axis position based on the value for the slider.
+
+### `YPositionSlider`
+This class handles the positioning on the y-axis of the ball, allowing the user to manipulate its position based on a slider in the UI. Inherits from `MonoBehavior`
+
+  - `Start()`: Sets min/mmax values of the slider and adds listener for slider change events.
+  
+  - `OnSliderChange(float sliderValue)`: Moves the ball's y-axis position based on the value for the slider.
 
 ## Updates
 [Updates will be posted here] 
