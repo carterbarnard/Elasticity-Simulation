@@ -46,5 +46,9 @@ This class handles the positioning on the y-axis of the ball, allowing the user 
   
   - `OnSliderChange(float sliderValue)`: Moves the ball's y-axis position based on the value for the slider.
 
-## Updates
-[Updates will be posted here] 
+## Requirements
+
+  - The user must have Unity Game Engine - Editor Version 6000.0.41f1+ installed
+    
+  - Compatible with Mac, Windows 10+, Linux
+
